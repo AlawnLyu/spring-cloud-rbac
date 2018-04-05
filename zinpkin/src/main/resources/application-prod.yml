@@ -1,0 +1,12 @@
+server:
+  port: 9100
+
+spring:
+  application:
+    name: zipkin-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://lyu:123@127.0.0.1:2100/eureka/
+

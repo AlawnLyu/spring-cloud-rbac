@@ -1,0 +1,46 @@
+server:
+  port: 6100
+
+spring:
+  application:
+    name: authentication-service
+  zipkin:
+    #链路数据收集并发送地址
+    base-url: http://127.0.0.1:9100
+  sleuth:
+    sampler:
+      #当前应用收集信息百分比
+      percentage: 0.1
+  #redis配置文件
+  redis:
+    host: 192.168.47.128
+    port: 6379
+    pool:
+      max-idle: 20
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/csdndemo?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8&nullNamePatternMatchesAll=true
+    username: root
+    password: gbsz123
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    type: com.alibaba.druid.pool.DruidDataSource
+
+eureka:
+  client:
+    #注册中心地址
+    service-url:
+      defaultZone: http://lyu:123@127.0.0.1:2100/eureka/

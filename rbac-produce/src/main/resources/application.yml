@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: prod-8100
+
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+logging:
+  level:
+    com.produce.sys.dao: debug
