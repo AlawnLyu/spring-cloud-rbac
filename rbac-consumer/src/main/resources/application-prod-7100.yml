@@ -27,17 +27,17 @@ ribbon:
   ReadTimeout: 1000
 
 #开启GZIP的压缩功能以减少HTTP通信的消耗
-feign:
-  hystrix:
-    enabled: true
-  compression:
-    request:
-      enabled: true
-      #以下的请求的类型且请求数据的大小超过2048的将为会压缩传输
-      mime-types: text/xml,application/xml,application/json
-      min-request-size: 2048
-    response:
-      enabled: true
+#feign:
+#  hystrix:
+#    enabled: true
+#  compression:
+#    request:
+#      enabled: true
+#      #以下的请求的类型且请求数据的大小超过2048的将为会压缩传输
+#      mime-types: text/xml,application/xml,application/json
+#      min-request-size: 2048
+#    response:
+#      enabled: true
 
 # 这里需要注意一点， Ribbon的超时与Hystrix的超时是两个概念。 为了让上述的重试机制实现有效，我们需要让Hystrix的超时时间大于Ribbon的超时时间， 否则Hystrix命令超时后，该命令直接熔断， 重试机制就 没有任何意义了。
 # Hystrix的全局的超时时间
