@@ -13,49 +13,53 @@ import java.util.Map;
 public class DictServiceHystric implements DictService {
     @Override
     public Map<String, Object> loadDict() {
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(SystemStaticConst.RESULT, SystemStaticConst.FAIL);
-        resultMap.put(SystemStaticConst.MSG, "服务发生错误");
-        return resultMap;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> getById(int id) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> get(Dict entity) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> save(Dict entity) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> update(Dict entity) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> remove(Dict entity) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> removeBath(String json) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> list(QueryDict entity) {
-        return null;
+        return getErrorMap();
     }
 
     @Override
     public Map<String, Object> isExist(QueryDict entity) {
-        return null;
+        return getErrorMap();
+    }
+
+    private Map<String, Object> getErrorMap() {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(SystemStaticConst.RESULT, SystemStaticConst.FAIL);
+        resultMap.put(SystemStaticConst.MSG, "服务发生错误");
+        return resultMap;
     }
 }

@@ -27,9 +27,9 @@ ribbon:
   ReadTimeout: 1000
 
 #开启GZIP的压缩功能以减少HTTP通信的消耗
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true
 #  compression:
 #    request:
 #      enabled: true
