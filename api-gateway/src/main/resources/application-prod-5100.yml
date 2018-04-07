@@ -1,6 +1,9 @@
 server:
   port: 5100
 spring:
+  devtools:
+    livereload:
+      enabled: false
   application:
     name: api-gateway
   zipkin:
@@ -63,6 +66,7 @@ AUTHENTICATION-SERVICE:
     MaxAutoRetriesNextServer: 1
     #对当前实例的重试次数
     MaxAutoRetries: 1
+
 zuul:
   routes:
     v1/rbac:
