@@ -1,17 +1,12 @@
 server:
-  port: 8100
+  port: 8080
 
 spring:
-  application:
-    name: rbac-produce
-  zipkin:
-    #链路数据收集并发送地址
-    base-url: http://127.0.0.1:9100
-  sleuth:
-    sampler:
-      #当前应用收集信息百分比
-      percentage: 0.1
-  #redis配置文件
+  thymeleaf:
+    cache: false
+  jackson:
+    serialization:
+      indent_output: true
   redis:
     host: 127.0.0.1
     port: 6379
@@ -38,9 +33,3 @@ spring:
       filters: stat,wall,log4j
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     type: com.alibaba.druid.pool.DruidDataSource
-
-eureka:
-  client:
-    #注册中心地址
-    service-url:
-      defaultZone: http://lyu:123@127.0.0.1:2100/eureka/

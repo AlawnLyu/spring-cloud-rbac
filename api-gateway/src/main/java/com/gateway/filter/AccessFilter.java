@@ -8,6 +8,10 @@ import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.zuul.filters.Route;
+import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +20,8 @@ import java.util.Map;
 public class AccessFilter extends ZuulFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(AccessFilter.class);
+
+  @Autowired public SimpleRouteLocator simpleRouteLocator;
 
   @Autowired private AuthenticationService authenticationService;
 
@@ -46,7 +52,40 @@ public class AccessFilter extends ZuulFilter {
    */
   @Override
   public boolean shouldFilter() {
-    return true;
+    try {
+      RequestContext requestContext = getCurrentContext();
+      HttpServletRequest request = requestContext.getRequest();
+
+      String actualPath = getUri(request.getRequestURI());
+      String targetLocation = getTargetLocation(request.getRequestURI());
+
+      if (logger.isDebugEnabled()) {
+        logger.debug("request.getRequestURI: " + request.getRequestURI());
+        logger.debug("request.getServletPath: " + request.getServletPath());
+        logger.debug("request.getRequestURL: " + request.getRequestURL());
+        logger.debug("actualPath: " + actualPath);
+        logger.debug("targetLocation: " + targetLocation);
+      }
+
+      if (targetLocation.equals("authentication-service") && actualPath.equals("/login")) {
+        return false;
+      }
+
+      String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+      String token = authorizationHeader.substring("Bearer".length()).trim();
+      if (token.isEmpty() || token.equals("")) {
+        return true;
+      }
+
+      if (logger.isDebugEnabled()) {
+        logger.debug("finding accesstoken from header: " + token);
+      }
+
+      return true;
+    } catch (Exception e) {
+      // e.printStackTrace();
+      return true;
+    }
   }
 
   /**
@@ -91,8 +130,22 @@ public class AccessFilter extends ZuulFilter {
       ctx.setResponseStatusCode(401);
       ctx.set("error.status_code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       ctx.set("error.exception", new RuntimeException((String) result.get("msg")));
-      throw new RuntimeException((String)result.get("msg"));
+      throw new RuntimeException((String) result.get("msg"));
     }
     return null;
+  }
+
+  private RequestContext getCurrentContext() {
+    return RequestContext.getCurrentContext();
+  }
+
+  private String getUri(String requestUri) {
+    Route route = simpleRouteLocator.getMatchingRoute(requestUri);
+    return route.getPath();
+  }
+
+  private String getTargetLocation(String requestUri) {
+    Route route = simpleRouteLocator.getMatchingRoute(requestUri);
+    return route.getLocation();
   }
 }

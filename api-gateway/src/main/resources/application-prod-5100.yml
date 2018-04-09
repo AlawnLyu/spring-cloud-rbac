@@ -16,7 +16,6 @@ spring:
       retry:
         enabled: true
 
-
 eureka:
   client:
     service-url:
@@ -69,6 +68,11 @@ AUTHENTICATION-SERVICE:
 
 zuul:
   routes:
+    v1/auth:
+      path: /v1/auth/**
+      serviceId: authentication-service
+      #实现指定的路由的cookie信息的传递
+      sensitiveHeaders:
     v1/rbac:
       path: /v1/rbac/**
       serviceId: rbac-consumer
