@@ -70,7 +70,7 @@ public class AccessFilter extends ZuulFilter {
         request.getMethod(),
         request.getRequestURL().toString() + "--" + request.getContentType());
 
-    Object accessToken = request.getParameter("token");
+    Object accessToken = request.getHeader("token");
     if (accessToken == null) {
       logger.warn("access token is empty");
       ctx.setSendZuulResponse(false);

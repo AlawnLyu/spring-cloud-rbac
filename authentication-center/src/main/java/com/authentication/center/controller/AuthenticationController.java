@@ -35,7 +35,7 @@ public class AuthenticationController {
                 null && !identify.getIp().equals("")) {
             logger.info("鉴权中心收到的token的值是：" + identify.getIp() + "--" + identify.getToken());
             User user = redisCache.getObject(identify.getIp() + "-" + identify.getToken(), User.class);
-            if (user != null) {
+            if (user == null) {
                 result.put("result", false);
                 result.put("msg", "用户未登陆，请重新登陆以后再操作！");
             } else {

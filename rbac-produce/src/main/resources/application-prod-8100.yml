@@ -13,7 +13,7 @@ spring:
       percentage: 0.1
   #redis配置文件
   redis:
-    host: 192.168.47.128
+    host: 127.0.0.1
     port: 6379
     pool:
       max-idle: 20
@@ -21,7 +21,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/csdndemo?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8&nullNamePatternMatchesAll=true
     username: root
-    password: 123456
+    password: gbsz123
     druid:
       initial-size: 5
       min-idle: 5
