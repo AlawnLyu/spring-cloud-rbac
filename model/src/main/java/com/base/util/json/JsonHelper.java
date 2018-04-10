@@ -1,5 +1,8 @@
 package com.base.util.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -9,6 +12,7 @@ import net.sf.json.JSONObject;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -22,6 +26,7 @@ public class JsonHelper {
   static {
     gson = new Gson();
     objectMapper = new ObjectMapper();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   public static Object toObject(String json, Class clz) {
@@ -39,8 +44,37 @@ public class JsonHelper {
   public static synchronized ObjectMapper newObjectMapperInstance() {
     if (objectMapper == null) {
       objectMapper = new ObjectMapper();
+      objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
     return objectMapper;
+  }
+
+  /**
+   * 获取泛型的Collection Type
+   *
+   * @param collectionClass 泛型的Collection
+   * @param elementClasses 元素类
+   * @return JavaType Java类型
+   * @since 1.0
+   */
+  public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
+    return objectMapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);
+  }
+
+  public static <T> T readObject(String value, Class<T> tClass) throws IOException {
+    return objectMapper.readValue(value, tClass);
+  }
+
+  public static <T> T readObject(String value, TypeReference valueTypeRef) throws IOException {
+    return objectMapper.readValue(value, valueTypeRef);
+  }
+
+  public static Object readObject(String value, JavaType javaType) throws IOException {
+    return objectMapper.readValue(value, javaType);
+  }
+
+  public static <T> String writeObject(T t) throws IOException {
+    return objectMapper.writeValueAsString(t);
   }
 
   public static String toJson(Object obj) {

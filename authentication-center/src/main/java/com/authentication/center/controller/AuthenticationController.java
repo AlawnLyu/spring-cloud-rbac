@@ -11,12 +11,15 @@ import com.base.entity.UserRole;
 import com.base.util.json.JsonHelper;
 import com.base.util.jwt.JWTUtil;
 import com.base.util.redis.RedisCache;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +58,16 @@ public class AuthenticationController {
         result.put("result", false);
         result.put("msg", "用户未登陆，请重新登陆以后再操作！");
       } else {
-        List<Tree> trees = redisCache.getList("tree-" + identify.getToken(), Tree.class);
+
+        List<Tree> trees = null;
+        try {
+          String json = redisCache.getString("tree-" + identify.getToken());
+          JavaType javaType = JsonHelper.getCollectionType(ArrayList.class, Tree.class);
+          trees = (List<Tree>) JsonHelper.readObject(json, javaType);
+          //trees = JsonHelper.readObject(json, new TypeReference<List<Tree>>(){});
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         boolean hasPermission = false;
         if (trees != null) {
           for (Tree tree : trees) {
