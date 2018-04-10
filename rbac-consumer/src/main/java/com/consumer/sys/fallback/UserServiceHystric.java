@@ -19,4 +19,9 @@ public class UserServiceHystric extends GenericHystric<User, QueryUser> implemen
   public Map<String, Object> loadRoles() {
     return getErrorMap();
   }
+
+  @Override
+  public Map<String, Object> findByLogin(String s) {
+    return getErrorMap();
+  }
 }

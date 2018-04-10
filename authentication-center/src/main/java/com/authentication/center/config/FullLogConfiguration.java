@@ -1,4 +1,4 @@
-package com.consumer.common.config;
+package com.authentication.center.config;
 
 import feign.Logger;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FullLogConfiguration {
-
   @Bean
   Logger.Level feignLoggerLevel() {
     // • NONE: 不记录任何信息。

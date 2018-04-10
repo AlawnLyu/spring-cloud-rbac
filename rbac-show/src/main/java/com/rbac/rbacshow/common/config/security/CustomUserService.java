@@ -1,9 +1,10 @@
 package com.rbac.rbacshow.common.config.security;
 
+import com.base.dto.AccessToken;
 import com.base.entity.User;
 import com.base.util.ip.IPUtil;
+import com.base.util.json.JsonHelper;
 import com.base.util.redis.RedisCache;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbac.rbacshow.common.util.user.UserInfoUtil;
 import com.rbac.rbacshow.sys.mapper.UserMapper;
 import com.rbac.rbacshow.sys.service.UserService;
@@ -28,25 +29,26 @@ public class CustomUserService implements UserDetailsService {
     if ((boolean) result.get("result") == false) {
       throw new RuntimeException("" + result.get("msg"));
     }
-    User user = new ObjectMapper().convertValue(result.get("data"), User.class);
+    User user = JsonHelper.newObjectMapperInstance().convertValue(result.get("data"), User.class);
     if (user == null) {
       throw new UsernameNotFoundException("用户名不存在!");
     }
-//    Map<String, Object> tokenMap = userService.getToken(s);
-//    if ((boolean) result.get("result") == false) {
-//      throw new RuntimeException("" + result.get("msg"));
-//    }
-//    String token = (String) result.get("data");
-    String token = "abcdef";
-    if (token == null) {
+    Map<String, Object> tokenMap = userService.getToken(s);
+    if ((boolean) tokenMap.get("result") == false) {
+      throw new RuntimeException("" + tokenMap.get("msg"));
+    }
+    AccessToken accessToken =
+        JsonHelper.newObjectMapperInstance().convertValue(tokenMap.get("data"), AccessToken.class);
+    if (accessToken == null) {
       throw new UsernameNotFoundException("获取Token失败!");
     }
-//    redisCache.setObject(token, user);
-//    redisCache.expire(token, 3600);
-//    UserInfoUtil.getRequest().getSession().setAttribute("token", token);
-//    String IP = IPUtil.getIpAddress(UserInfoUtil.getRequest());
-//    redisCache.setObject(IP + "-" + token, user);
-//    redisCache.expire(IP + "-" + token, 3600);
+    String token = accessToken.getAccess_token();
+    redisCache.setObject(token, user);
+    redisCache.expire(token, accessToken.getExpires_in());
+    UserInfoUtil.getRequest().getSession().setAttribute("token", token);
+    String IP = IPUtil.getIpAddress(UserInfoUtil.getRequest());
+    redisCache.setObject(IP + "-" + token, user);
+    redisCache.expire(IP + "-" + token, accessToken.getExpires_in());
     user.setLastLoginDate(new Date());
     if (user.getState().equalsIgnoreCase("0")) {
       throw new LockedException("用户账号被冻结，无法登陆，请联系管理员！");

@@ -1,6 +1,5 @@
 package com.rbac.rbacshow.sys.service;
 
-import com.base.entity.User;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +19,9 @@ public interface UserService {
   Map<String, Object> login(@RequestParam("s") String s);
 
   @RequestMapping(
-    value = "/getToken",
+    value = "/v1/auth/getToken",
     method = RequestMethod.POST,
     produces = MediaType.APPLICATION_JSON_VALUE
   )
-  Map<String, Object> getToken(String s);
+  Map<String, Object> getToken(@RequestParam("s") String s);
 }

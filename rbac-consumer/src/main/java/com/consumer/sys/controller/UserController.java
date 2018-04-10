@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -40,5 +41,14 @@ public class UserController extends GenericController<User, QueryUser> {
   )
   public Map<String, Object> loadRoles() {
     return userService.loadRoles();
+  }
+
+  @RequestMapping(
+    value = "/findByLogin",
+    method = RequestMethod.POST,
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public Map<String, Object> findByLogin(@RequestParam("s") String s) {
+    return userService.findByLogin(s);
   }
 }

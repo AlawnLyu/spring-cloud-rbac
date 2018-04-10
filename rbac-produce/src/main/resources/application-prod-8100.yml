@@ -21,7 +21,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/csdndemo?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8&nullNamePatternMatchesAll=true
     username: root
-    password: 123456
+    password: gbsz123
     druid:
       initial-size: 5
       min-idle: 5

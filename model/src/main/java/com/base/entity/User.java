@@ -45,10 +45,6 @@ public class User implements Serializable {
      */
     private OrgGroup orgGroup;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public int getId() {
         return id;
     }

@@ -67,20 +67,10 @@ public class AccessFilter extends ZuulFilter {
         logger.debug("targetLocation: " + targetLocation);
       }
 
-      if (targetLocation.equals("authentication-service") && actualPath.equals("/login")) {
+      if (targetLocation.equals("authentication-service")
+          && (actualPath.equals("/login") || actualPath.equals("/getToken"))) {
         return false;
       }
-
-      String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-      String token = authorizationHeader.substring("Bearer".length()).trim();
-      if (token.isEmpty() || token.equals("")) {
-        return true;
-      }
-
-      if (logger.isDebugEnabled()) {
-        logger.debug("finding accesstoken from header: " + token);
-      }
-
       return true;
     } catch (Exception e) {
       // e.printStackTrace();
@@ -109,8 +99,10 @@ public class AccessFilter extends ZuulFilter {
         request.getMethod(),
         request.getRequestURL().toString() + "--" + request.getContentType());
 
-    Object accessToken = request.getHeader("token");
-    if (accessToken == null) {
+    String authorizationHeader = ctx.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
+    String token = authorizationHeader.substring("Bearer".length()).trim();
+
+    if (token == null) {
       logger.warn("access token is empty");
       ctx.setSendZuulResponse(false);
       ctx.setResponseStatusCode(401);
@@ -121,7 +113,8 @@ public class AccessFilter extends ZuulFilter {
 
     Map<String, Object> result =
         authenticationService.identify(
-            new Identify((String) accessToken, IPUtil.getIpAddress(request)));
+            new Identify(
+                token, IPUtil.getIpAddress(request), getUri(ctx.getRequest().getRequestURI())));
 
     logger.info("鉴权中心鉴定结果是：{}", result.get("msg"));
 
