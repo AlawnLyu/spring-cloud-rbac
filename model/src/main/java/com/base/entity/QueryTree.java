@@ -11,7 +11,7 @@ public class QueryTree extends QueryBase {
   private long treeOrder;
   private String url;
   private String state;
-  private int display;
+  private String display;
 
   public String getCode() {
     return code;
@@ -69,11 +69,11 @@ public class QueryTree extends QueryBase {
     this.state = state;
   }
 
-  public int getDisplay() {
+  public String getDisplay() {
     return display;
   }
 
-  public void setDisplay(int display) {
+  public void setDisplay(String display) {
     this.display = display;
   }
 }

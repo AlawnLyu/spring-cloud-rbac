@@ -10,6 +10,7 @@
         <result property="treeOrder" column="tree_order"/>
         <result property="url" column="url"/>
         <result property="state" column="state"/>
+        <result property="display" column="display"/>
     </resultMap>
 
     <!-- 加载用户的菜单树的数据 -->
@@ -22,19 +23,19 @@
 
     <!--根据主键获取对象-->
     <select id="get" parameterType="com.base.entity.Tree" resultMap="TreeMap">
-        SELECT id,code,icon,name,p_id,tree_order,url,state FROM tree
+        SELECT id,code,icon,name,p_id,tree_order,url,state,display FROM tree
         WHERE id=#{id}
     </select>
 
     <!--保存-->
     <insert id="save" parameterType="com.base.entity.Tree" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tree(code,icon,name,p_id,tree_order,url,state)
-        VALUES(#{code},#{icon},#{name},#{pId},#{treeOrder},#{url},#{state})
+        INSERT INTO tree(code,icon,name,p_id,tree_order,url,state,display)
+        VALUES(#{code},#{icon},#{name},#{pId},#{treeOrder},#{url},#{state},#{display})
     </insert>
 
     <!--修改-->
     <update id="update" parameterType="com.base.entity.Tree">
-        UPDATE tree SET code=#{code},icon=#{icon},name=#{name},p_id=#{pId},tree_order=#{treeOrder},url=#{url},state=#{state}
+        UPDATE tree SET code=#{code},icon=#{icon},name=#{name},p_id=#{pId},tree_order=#{treeOrder},url=#{url},state=#{state},display=#{display}
         WHERE id=#{id}
     </update>
 
@@ -45,7 +46,7 @@
 
     <!--分页查询-->
     <select id="findByPage" parameterType="com.base.entity.QueryTree" resultMap="TreeMap">
-        SELECT id,code,icon,name,p_id,tree_order,url,state FROM tree
+        SELECT id,code,icon,name,p_id,tree_order,url,state,display FROM tree
         WHERE 1=1
         <if test="code!=null and code!='' ">
             AND code=#{code}
@@ -67,6 +68,9 @@
         </if>
         <if test="state!=null and state!='' ">
             AND state=#{state}
+        </if>
+        <if test="display!=null and display!='' ">
+            AND display=#{display}
         </if>
         <if test="sort!= null and sort!='' ">
             order by ${sort} ${order}
@@ -99,6 +103,9 @@
         <if test="state!=null and state!='' ">
             AND state=#{state}
         </if>
+        <if test="display!=null and display!='' ">
+            AND display=#{display}
+        </if>
         <if test="sort!= null and sort!='' ">
             order by ${sort} ${order}
         </if>
@@ -106,7 +113,7 @@
 
     <!--查询-->
     <select id="query" parameterType="com.base.entity.QueryTree" resultMap="TreeMap">
-        SELECT id,code,icon,name,p_id,tree_order,url,state FROM tree
+        SELECT id,code,icon,name,p_id,tree_order,url,state,display FROM tree
         WHERE 1=1
         <if test="code!=null and code!='' ">
             AND code=#{code}
@@ -128,6 +135,9 @@
         </if>
         <if test="state!=null and state!='' ">
             AND state=#{state}
+        </if>
+        <if test="display!=null and display!='' ">
+            AND display=#{display}
         </if>
         <if test="sort!= null and sort!='' ">
             order by ${sort} ${order}

@@ -22,7 +22,7 @@ public class Tree implements Comparable<Tree> {
   private long treeOrder;
   private String url;
   private String state;
-  private int display;
+  private String display;
   /** 菜单节点是否选中的状态 */
   private boolean checked;
   /** 父菜单信息 */
@@ -86,11 +86,11 @@ public class Tree implements Comparable<Tree> {
     this.url = url;
   }
 
-  public int getDisplay() {
+  public String getDisplay() {
     return display;
   }
 
-  public void setDisplay(int display) {
+  public void setDisplay(String display) {
     this.display = display;
   }
 
