@@ -64,18 +64,13 @@ public class AuthenticationController {
           String json = redisCache.getString("tree-" + identify.getToken());
           JavaType javaType = JsonHelper.getCollectionType(ArrayList.class, Tree.class);
           trees = (List<Tree>) JsonHelper.readObject(json, javaType);
-          //trees = JsonHelper.readObject(json, new TypeReference<List<Tree>>(){});
+          // trees = JsonHelper.readObject(json, new TypeReference<List<Tree>>(){});
         } catch (IOException e) {
           e.printStackTrace();
         }
         boolean hasPermission = false;
         if (trees != null) {
-          for (Tree tree : trees) {
-            if (identify.getUri().contains(tree.getUrl())) {
-              hasPermission = true;
-              break;
-            }
-          }
+          hasPermission = checkPermission(trees, identify.getUri());
         }
         if (hasPermission) {
           result.put("result", true);
@@ -145,6 +140,30 @@ public class AuthenticationController {
     accessToken.setToken_type("bearer");
     result.put("result", true);
     result.put("data", accessToken);
+    return result;
+  }
+
+  /**
+   * 校验是否有权限访问
+   *
+   * @param trees
+   * @param uri
+   * @return
+   */
+  private boolean checkPermission(List<Tree> trees, String uri) {
+    boolean result = false;
+    for (Tree tree : trees) {
+      if (result) {
+        break;
+      }
+      if (tree.getChild().size() > 0) {
+        result = checkPermission(tree.getChild(), uri);
+      } else {
+        if (uri.contains(tree.getUrl())) {
+          result = true;
+        }
+      }
+    }
     return result;
   }
 }
