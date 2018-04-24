@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Map;
 
-@FeignClient(value = "RBAC-PRODUCE", fallback = DictServiceHystric.class, configuration = FullLogConfiguration.class,
-        path = "/dict")
+@FeignClient(
+  value = "RBAC-PRODUCE",
+  fallback = DictServiceHystric.class,
+  configuration = FullLogConfiguration.class,
+  path = "/dict"
+)
 public interface DictService extends GenericService<Dict, QueryDict> {
 
     /**
